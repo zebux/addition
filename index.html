@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Révision des Additions</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .welcome {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            font-size: 1.3em;
+            color: #764ba2;
+            font-weight: bold;
+        }
+
+        .welcome-icon {
+            font-size: 2em;
+        }
+
+        .addition {
+            display: inline-block;
+            text-align: right;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .retenue-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 5px;
+        }
+
+        .retenue-input {
+            width: 40px;
+            height: 40px;
+            font-size: 1.5em;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            background-color: #fff3cd;
+            font-weight: bold;
+            color: #856404;
+        }
+
+        .retenue-input:focus {
+            outline: none;
+            border-color: #ffc107;
+            background-color: #fff;
+        }
+
+        .number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #333;
+            margin: 5px 0;
+            min-width: 120px;
+        }
+
+        .operator {
+            position: relative;
+            left: -20px;
+        }
+
+        .line {
+            border-bottom: 4px solid #333;
+            margin: 10px 0;
+        }
+
+        .input-container {
+            margin: 20px 0;
+        }
+
+        input {
+            font-size: 2.5em;
+            padding: 10px 20px;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            text-align: center;
+            width: 120px;
+            font-weight: bold;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+
+        
+        button {
+            font-size: 1.5em;
+            padding: 15px 40px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #764ba2;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .message {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-top: 20px;
+            min-height: 50px;
+        }
+
+        .vrai {
+            color: #22c55e;
+            animation: bounce 0.5s;
+        }
+
+        .faux {
+            color: #ef4444;
+            animation: shake 0.5s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="welcome">
+            <span class="welcome-icon">🦄</span>
+            <span>Bonjour mon petit Koala, on se fait une petite révision de mathématique</span>
+            <span class="welcome-icon">🐨</span>
+        </div>
+        
+        <div class="addition">
+            <div class="retenue-container">
+                <input type="text" class="retenue-input" id="retenue1" maxlength="1" placeholder="">
+            </div>
+            <div class="number" id="number1"></div>
+            <div class="number operator">
+                <span style="position: absolute; left: -30px;">+</span>
+                <span id="number2"></span>
+            </div>
+            <div class="line"></div>
+        </div>
+
+        <div class="input-container">
+            <input type="number" id="answer" placeholder="?" autocomplete="off">
+        </div>
+
+        <button onclick="verifier()">Vérifier</button>
+
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        let nombre1, nombre2, resultatCorrect;
+
+        function genererAddition() {
+            // Générer deux nombres entre 10 et 99
+            nombre1 = Math.floor(Math.random() * 90) + 10;
+            nombre2 = Math.floor(Math.random() * 90) + 10;
+            resultatCorrect = nombre1 + nombre2;
+
+            // Afficher les nombres
+            document.getElementById('number1').textContent = nombre1;
+            document.getElementById('number2').textContent = nombre2;
+            document.getElementById('answer').value = '';
+            document.getElementById('retenue1').value = '';
+            document.getElementById('message').textContent = '';
+            document.getElementById('answer').focus();
+        }
+
+        function verifier() {
+            const reponseUtilisateur = parseInt(document.getElementById('answer').value);
+            const messageElement = document.getElementById('message');
+
+            if (isNaN(reponseUtilisateur)) {
+                messageElement.textContent = '⚠️ Entre un nombre !';
+                messageElement.className = 'message faux';
+                return;
+            }
+
+            if (reponseUtilisateur === resultatCorrect) {
+                messageElement.textContent = '✅ VRAI';
+                messageElement.className = 'message vrai';
+                
+                // Attendre 3 secondes puis générer une nouvelle addition
+                setTimeout(() => {
+                    genererAddition();
+                }, 3000);
+            } else {
+                messageElement.textContent = '❌ FAUX';
+                messageElement.className = 'message faux';
+                // L'addition reste la même, l'enfant peut réessayer
+                document.getElementById('answer').value = '';
+                document.getElementById('answer').focus();
+            }
+        }
+
+        // Permettre de valider avec la touche Entrée
+        document.getElementById('answer').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                verifier();
+            }
+        });
+
+        // Générer la première addition au chargement de la page
+        genererAddition();
+    </script>
+</body>
+</html>
