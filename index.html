@@ -152,6 +152,20 @@
             animation: shake 0.5s;
         }
 
+        .reward-image {
+            display: none;
+            max-width: 400px;
+            max-height: 400px;
+            margin: 20px auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            animation: zoomIn 0.5s;
+        }
+
+        .reward-image.show {
+            display: block;
+        }
+
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-20px); }
@@ -161,6 +175,17 @@
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-10px); }
             75% { transform: translateX(10px); }
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -191,10 +216,26 @@
         <button onclick="verifier()">Vérifier</button>
 
         <div class="message" id="message"></div>
+        <img id="rewardImage" class="reward-image" alt="Bravo!">
     </div>
 
     <script>
         let nombre1, nombre2, resultatCorrect;
+        
+        // Liste des images disponibles dans le répertoire kpopimg
+        const images = [
+            'kpopimg/2.jpg',
+            'kpopimg/5.jpg',
+            'kpopimg/6.jpg',
+            'kpopimg/7.jpg',
+            'kpopimg/8.jpg',
+            'kpopimg/9.jpg',
+            'kpopimg/10.jpg',
+            'kpopimg/11.jpg',
+            'kpopimg/12.jpg',
+            'kpopimg/13.jpg',
+            'kpopimg/15.jpg'
+        ];
 
         function genererAddition() {
             // Générer deux nombres entre 10 et 99
@@ -208,6 +249,7 @@
             document.getElementById('answer').value = '';
             document.getElementById('retenue1').value = '';
             document.getElementById('message').textContent = '';
+            document.getElementById('rewardImage').classList.remove('show');
             document.getElementById('answer').focus();
         }
 
@@ -225,10 +267,16 @@
                 messageElement.textContent = '✅ VRAI';
                 messageElement.className = 'message vrai';
                 
-                // Attendre 3 secondes puis générer une nouvelle addition
+                // Choisir une image aléatoire
+                const imageAleatoire = images[Math.floor(Math.random() * images.length)];
+                const imageElement = document.getElementById('rewardImage');
+                imageElement.src = imageAleatoire;
+                imageElement.classList.add('show');
+                
+                // Attendre 5 secondes puis générer une nouvelle addition
                 setTimeout(() => {
                     genererAddition();
-                }, 3000);
+                }, 5000);
             } else {
                 messageElement.textContent = '❌ FAUX';
                 messageElement.className = 'message faux';
