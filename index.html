@@ -280,9 +280,19 @@
             } else {
                 messageElement.textContent = '❌ FAUX';
                 messageElement.className = 'message faux';
-                // L'addition reste la même, l'enfant peut réessayer
-                document.getElementById('answer').value = '';
-                document.getElementById('answer').focus();
+                
+                // Afficher l'image d'erreur
+                const imageElement = document.getElementById('rewardImage');
+                imageElement.src = 'error.jpg';
+                imageElement.classList.add('show');
+                
+                // Attendre 3 secondes puis cacher l'image et permettre une nouvelle tentative
+                setTimeout(() => {
+                    imageElement.classList.remove('show');
+                    messageElement.textContent = '';
+                    document.getElementById('answer').value = '';
+                    document.getElementById('answer').focus();
+                }, 3000);
             }
         }
 
