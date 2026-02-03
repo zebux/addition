@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,10 +18,12 @@
 
         .container {
             background: white;
-            padding: 40px;
+            padding: 20px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             text-align: center;
+            max-width: 500px;
+            width: 100%;
         }
 
         h1 {
@@ -33,12 +36,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
-            font-size: 1.6em;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 1.2em;
             color: #333;
             font-weight: bold;
-            line-height: 1.4;
+            line-height: 1.2;
         }
 
         .welcome-icon {
@@ -46,16 +49,24 @@
         }
 
         .addition {
-            display: inline-block;
-            text-align: right;
-            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin: 10px 0;
             position: relative;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .retenue-container {
             display: flex;
-            justify-content: center;
+            justify-content: flex-end;
+            /* Align rights to match numbers */
             margin-bottom: 5px;
+            width: 100%;
+            padding-right: 35px;
+            /* Offset to align with the first digit roughly */
         }
 
         .retenue-input {
@@ -77,34 +88,43 @@
         }
 
         .number {
-            font-size: 4em;
+            font-size: 3.5em;
+            /* Slightly smaller */
             font-weight: bold;
             color: #000;
-            margin: 10px 0;
-            min-width: 150px;
+            margin: 5px 0;
+            min-width: 120px;
+            text-align: right;
+            line-height: 1;
         }
 
         .operator {
             position: relative;
-            left: -20px;
+        }
+
+        .operator span:first-child {
+            position: absolute;
+            left: -40px;
+            top: 5px;
         }
 
         .line {
             border-bottom: 4px solid #333;
-            margin: 10px 0;
+            margin: 5px 0;
+            width: 100%;
         }
 
         .input-container {
-            margin: 20px 0;
+            margin: 15px 0;
         }
 
         input {
-            font-size: 3em;
-            padding: 15px 25px;
+            font-size: 2.5em;
+            padding: 10px 20px;
             border: 4px solid #667eea;
             border-radius: 10px;
             text-align: center;
-            width: 150px;
+            width: 120px;
             font-weight: bold;
         }
 
@@ -113,17 +133,17 @@
             border-color: #764ba2;
         }
 
-        
+
         button {
-            font-size: 1.8em;
-            padding: 20px 50px;
+            font-size: 1.5em;
+            padding: 15px 40px;
             background: #667eea;
             color: white;
             border: none;
             border-radius: 10px;
             cursor: pointer;
             font-weight: bold;
-            margin-top: 20px;
+            margin-top: 10px;
             transition: background 0.3s;
         }
 
@@ -136,10 +156,10 @@
         }
 
         .message {
-            font-size: 3em;
+            font-size: 2.5em;
             font-weight: bold;
-            margin-top: 20px;
-            min-height: 60px;
+            margin-top: 15px;
+            min-height: 50px;
         }
 
         .vrai {
@@ -154,9 +174,9 @@
 
         .reward-image {
             display: none;
-            max-width: 400px;
-            max-height: 400px;
-            margin: 20px auto;
+            max-width: 100%;
+            max-height: 200px;
+            margin: 10px auto;
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
             animation: zoomIn 0.5s;
@@ -167,14 +187,31 @@
         }
 
         @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
         }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            75% {
+                transform: translateX(10px);
+            }
         }
 
         @keyframes zoomIn {
@@ -182,6 +219,7 @@
                 transform: scale(0);
                 opacity: 0;
             }
+
             to {
                 transform: scale(1);
                 opacity: 1;
@@ -194,14 +232,34 @@
             align-items: flex-start;
             flex-wrap: wrap;
             justify-content: center;
+            width: 100%;
+            padding: 10px;
         }
 
         .scoreboard {
             background: white;
-            padding: 30px;
+            padding: 20px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            min-width: 300px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* Force side-by-side on tablets and larger */
+        @media (min-width: 768px) {
+            .main-layout {
+                flex-wrap: nowrap;
+                align-items: flex-start;
+            }
+
+            .container {
+                flex: 2;
+            }
+
+            .scoreboard {
+                flex: 1;
+                min-width: 300px;
+            }
         }
 
         .scoreboard h2 {
@@ -217,7 +275,8 @@
             border-collapse: collapse;
         }
 
-        .score-table th, .score-table td {
+        .score-table th,
+        .score-table td {
             padding: 10px;
             text-align: center;
             border-bottom: 1px solid #eee;
@@ -239,6 +298,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="main-layout">
         <div class="container">
@@ -247,10 +307,11 @@
                 <span>Bonjour mon petit Koala, on se fait une petite révision de mathématique</span>
                 <span class="welcome-icon">🐨</span>
             </div>
-            
+
             <div class="addition">
                 <div class="retenue-container">
-                    <input type="text" class="retenue-input" id="retenue1" maxlength="1" placeholder="">
+                    <input type="number" class="retenue-input" id="retenue1" placeholder="" inputmode="numeric"
+                        oninput="if(this.value.length > 1) this.value = this.value.slice(0,1)">
                 </div>
                 <div class="number" id="number1"></div>
                 <div class="number operator">
@@ -291,7 +352,7 @@
         let nombre1, nombre2, resultatCorrect;
         let history = [];
 
-        
+
         // Liste des images disponibles dans le répertoire kpopimg
         const images = [
             'kpopimg/1.jpg',
@@ -338,7 +399,7 @@
                 const row = document.createElement('tr');
                 const symbol_status = item.correct ? '✅' : '❌';
                 const class_status = item.correct ? 'status-vrai' : 'status-faux';
-                
+
                 row.innerHTML = `
                     <td>${item.n1} + ${item.n2}</td>
                     <td>${item.userAns}</td>
@@ -359,7 +420,7 @@
             }
 
             const isCorrect = reponseUtilisateur === resultatCorrect;
-            
+
             // Ajouter à l'historique
             history.push({
                 n1: nombre1,
@@ -372,13 +433,13 @@
             if (isCorrect) {
                 messageElement.textContent = '✅ VRAI';
                 messageElement.className = 'message vrai';
-                
+
                 // Choisir une image aléatoire
                 const imageAleatoire = images[Math.floor(Math.random() * images.length)];
                 const imageElement = document.getElementById('rewardImage');
                 imageElement.src = imageAleatoire;
                 imageElement.classList.add('show');
-                
+
                 // Attendre 5 secondes puis générer une nouvelle addition
                 setTimeout(() => {
                     genererAddition();
@@ -386,12 +447,12 @@
             } else {
                 messageElement.textContent = '❌ FAUX';
                 messageElement.className = 'message faux';
-                
+
                 // Afficher l'image d'erreur
                 const imageElement = document.getElementById('rewardImage');
                 imageElement.src = 'error.jpg';
                 imageElement.classList.add('show');
-                
+
                 // Attendre 3 secondes puis cacher l'image et permettre une nouvelle tentative
                 setTimeout(() => {
                     imageElement.classList.remove('show');
@@ -403,7 +464,7 @@
         }
 
         // Permettre de valider avec la touche Entrée
-        document.getElementById('answer').addEventListener('keypress', function(event) {
+        document.getElementById('answer').addEventListener('keypress', function (event) {
             if (event.key === 'Enter') {
                 verifier();
             }
@@ -413,4 +474,5 @@
         genererAddition();
     </script>
 </body>
+
 </html>
