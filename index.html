@@ -187,40 +187,110 @@
                 opacity: 1;
             }
         }
+
+        .main-layout {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .scoreboard {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            min-width: 300px;
+        }
+
+        .scoreboard h2 {
+            color: #667eea;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            text-align: center;
+        }
+
+        .score-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .score-table th, .score-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .score-table th {
+            color: #666;
+            font-weight: bold;
+        }
+
+        .status-vrai {
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        .status-faux {
+            color: #ef4444;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="welcome">
-            <span class="welcome-icon">🦄</span>
-            <span>Bonjour mon petit Koala, on se fait une petite révision de mathématique</span>
-            <span class="welcome-icon">🐨</span>
-        </div>
-        
-        <div class="addition">
-            <div class="retenue-container">
-                <input type="text" class="retenue-input" id="retenue1" maxlength="1" placeholder="">
+    <div class="main-layout">
+        <div class="container">
+            <div class="welcome">
+                <span class="welcome-icon">🦄</span>
+                <span>Bonjour mon petit Koala, on se fait une petite révision de mathématique</span>
+                <span class="welcome-icon">🐨</span>
             </div>
-            <div class="number" id="number1"></div>
-            <div class="number operator">
-                <span style="position: absolute; left: -30px;">+</span>
-                <span id="number2"></span>
+            
+            <div class="addition">
+                <div class="retenue-container">
+                    <input type="text" class="retenue-input" id="retenue1" maxlength="1" placeholder="">
+                </div>
+                <div class="number" id="number1"></div>
+                <div class="number operator">
+                    <span style="position: absolute; left: -30px;">+</span>
+                    <span id="number2"></span>
+                </div>
+                <div class="line"></div>
             </div>
-            <div class="line"></div>
+
+            <div class="input-container">
+                <input type="number" id="answer" placeholder="?" autocomplete="off">
+            </div>
+
+            <button onclick="verifier()">Vérifier</button>
+
+            <div class="message" id="message"></div>
+            <img id="rewardImage" class="reward-image" alt="Bravo!">
         </div>
 
-        <div class="input-container">
-            <input type="number" id="answer" placeholder="?" autocomplete="off">
+        <div class="scoreboard">
+            <h2>Tableau des scores</h2>
+            <table class="score-table">
+                <thead>
+                    <tr>
+                        <th>Calcul</th>
+                        <th>Réponse</th>
+                        <th>Résultat</th>
+                    </tr>
+                </thead>
+                <tbody id="scoreBody">
+                    <!-- Les scores seront ajoutés ici -->
+                </tbody>
+            </table>
         </div>
-
-        <button onclick="verifier()">Vérifier</button>
-
-        <div class="message" id="message"></div>
-        <img id="rewardImage" class="reward-image" alt="Bravo!">
     </div>
 
     <script>
         let nombre1, nombre2, resultatCorrect;
+        let history = [];
+
         
         // Liste des images disponibles dans le répertoire kpopimg
         const images = [
@@ -257,6 +327,27 @@
             document.getElementById('answer').focus();
         }
 
+        function updateScoreboard() {
+            const tbody = document.getElementById('scoreBody');
+            tbody.innerHTML = '';
+
+            // Prendre les 10 derniers, inverser pour avoir le plus récent en haut
+            const recentHistory = history.slice(-10).reverse();
+
+            recentHistory.forEach(item => {
+                const row = document.createElement('tr');
+                const symbol_status = item.correct ? '✅' : '❌';
+                const class_status = item.correct ? 'status-vrai' : 'status-faux';
+                
+                row.innerHTML = `
+                    <td>${item.n1} + ${item.n2}</td>
+                    <td>${item.userAns}</td>
+                    <td class="${class_status}">${symbol_status}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
         function verifier() {
             const reponseUtilisateur = parseInt(document.getElementById('answer').value);
             const messageElement = document.getElementById('message');
@@ -267,7 +358,18 @@
                 return;
             }
 
-            if (reponseUtilisateur === resultatCorrect) {
+            const isCorrect = reponseUtilisateur === resultatCorrect;
+            
+            // Ajouter à l'historique
+            history.push({
+                n1: nombre1,
+                n2: nombre2,
+                userAns: reponseUtilisateur,
+                correct: isCorrect
+            });
+            updateScoreboard();
+
+            if (isCorrect) {
                 messageElement.textContent = '✅ VRAI';
                 messageElement.className = 'message vrai';
                 
