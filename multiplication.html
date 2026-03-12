@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Révision des Multiplications</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .main-layout {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .container,
+        .scoreboard,
+        .tables-selection {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .container {
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            /* Flex order for mobile: 1 (top) */
+            order: 1;
+        }
+
+        .tables-selection {
+            width: 100%;
+            max-width: 250px;
+            /* Flex order for mobile: 2 */
+            order: 2;
+        }
+
+        .scoreboard {
+            width: 100%;
+            max-width: 400px;
+            /* Flex order for mobile: 3 */
+            order: 3;
+        }
+
+        /* Force layout on larger screens */
+        @media (min-width: 1000px) {
+            .main-layout {
+                flex-wrap: nowrap;
+                align-items: flex-start;
+            }
+
+            .tables-selection {
+                order: 1;
+                flex: 1;
+            }
+
+            .container {
+                order: 2;
+                flex: 2;
+            }
+
+            .scoreboard {
+                order: 3;
+                flex: 1;
+            }
+        }
+
+        h1,
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .welcome {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            color: #333;
+            font-weight: bold;
+            line-height: 1.2;
+            min-height: 60px;
+        }
+
+        .welcome-icon {
+            font-size: 2em;
+        }
+
+        .operation {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin: 10px 0;
+            position: relative;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .number {
+            font-size: 3.5em;
+            font-weight: bold;
+            color: #000;
+            margin: 5px 0;
+            min-width: 120px;
+            text-align: right;
+            line-height: 1;
+        }
+
+        .operator {
+            position: relative;
+        }
+
+        .operator span:first-child {
+            position: absolute;
+            left: -40px;
+            top: 5px;
+            font-size: 0.8em;
+        }
+
+        .line {
+            border-bottom: 4px solid #333;
+            margin: 5px 0;
+            width: 100%;
+        }
+
+        .input-container {
+            margin: 15px 0;
+        }
+
+        input[type="number"] {
+            font-size: 2.5em;
+            padding: 10px 20px;
+            border: 4px solid #667eea;
+            border-radius: 10px;
+            text-align: center;
+            width: 120px;
+            font-weight: bold;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+
+        button.verify-btn {
+            font-size: 1.5em;
+            padding: 15px 40px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        button.verify-btn:hover {
+            background: #764ba2;
+        }
+
+        button.verify-btn:active {
+            transform: scale(0.95);
+        }
+
+        .message {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-top: 15px;
+            min-height: 50px;
+        }
+
+        .vrai {
+            color: #22c55e;
+            animation: bounce 0.5s;
+        }
+
+        .faux {
+            color: #ef4444;
+            animation: shake 0.5s;
+        }
+
+        .reward-image {
+            display: none;
+            max-width: 100%;
+            max-height: 200px;
+            margin: 10px auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            animation: zoomIn 0.5s;
+        }
+
+        .reward-image.show {
+            display: block;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            75% {
+                transform: translateX(10px);
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Styles for checkboxes */
+        .table-checkbox-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        .table-checkbox-item {
+            margin: 10px 0;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .table-checkbox-item:hover {
+            background: #f0f4ff;
+        }
+
+        .table-checkbox-item input {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .score-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .score-table th,
+        .score-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .score-table th {
+            color: #666;
+            font-weight: bold;
+        }
+
+        .status-vrai {
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        .status-faux {
+            color: #ef4444;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-layout">
+
+        <!-- Section Sélection des tables -->
+        <div class="tables-selection">
+            <h2>Tables</h2>
+            <div style="margin-bottom: 10px; font-size: 0.9em; color: #666;">Choisis tes tables :</div>
+            <div class="table-checkbox-list" id="checkboxList">
+                <!-- Checkboxes générées par JS -->
+            </div>
+            <button onclick="selectAllTables()"
+                style="margin-top: 10px; width: 100%; padding: 8px; background: #eee; border: none; border-radius: 5px; cursor: pointer;">Toutes</button>
+            <button onclick="selectNoTables()"
+                style="margin-top: 5px; width: 100%; padding: 8px; background: #eee; border: none; border-radius: 5px; cursor: pointer;">Aucune</button>
+        </div>
+
+        <!-- Section Jeu -->
+        <div class="container">
+            <div class="welcome">
+                <span class="welcome-icon">🦄</span>
+                <span>Bonjour mon petit Koala, on révise les multiplications !</span>
+                <span class="welcome-icon">🐨</span>
+            </div>
+
+            <div class="operation">
+                <div class="number" id="number1"></div>
+                <div class="number operator">
+                    <span style="position: absolute; left: -30px;">x</span>
+                    <span id="number2"></span>
+                </div>
+                <div class="line"></div>
+            </div>
+
+            <div class="input-container">
+                <input type="number" id="answer" placeholder="?" autocomplete="off">
+            </div>
+
+            <button class="verify-btn" onclick="verifier()">Vérifier</button>
+
+            <div class="message" id="message"></div>
+            <img id="rewardImage" class="reward-image" alt="Bravo!">
+        </div>
+
+        <!-- Section Score -->
+        <div class="scoreboard">
+            <h2>Tableau des scores</h2>
+            <table class="score-table">
+                <thead>
+                    <tr>
+                        <th>Calcul</th>
+                        <th>Réponse</th>
+                        <th>Résultat</th>
+                    </tr>
+                </thead>
+                <tbody id="scoreBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let nombre1, nombre2, resultatCorrect;
+        let history = [];
+        const tableCount = 10; // Tables 1 à 10
+
+        const images = [
+            'kpopimg/1.jpg', 'kpopimg/2.jpg', 'kpopimg/3.jpg', 'kpopimg/4.jpg', 'kpopimg/5.jpg',
+            'kpopimg/6.jpg', 'kpopimg/7.jpg', 'kpopimg/8.jpg', 'kpopimg/9.jpg', 'kpopimg/10.jpg',
+            'kpopimg/11.jpg', 'kpopimg/12.jpg', 'kpopimg/13.jpg', 'kpopimg/14.jpg', 'kpopimg/15.jpg'
+        ];
+
+        // Initialisation des checkboxes
+        const checkboxList = document.getElementById('checkboxList');
+        for (let i = 1; i <= tableCount; i++) {
+            const label = document.createElement('label');
+            label.className = 'table-checkbox-item';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = i;
+            checkbox.id = 'table-' + i;
+            // Par défaut, tables 2 et 3 cochées comme avant, ou toutes ?
+            // L'utilisateur voulait choisir. Mettons 2 et 3 par défaut pour commencer facile.
+            if (i === 2 || i === 3) checkbox.checked = true;
+
+            checkbox.onchange = function () {
+                // Si on change les tables, on peut relancer une question immédiatement ou attendre la prochaine ?
+                // Mieux vaut attendre la prochaine réussite ou forcer si l'utilisateur le veut.
+                // Ici on laisse le flux naturel, la prochaine question prendra en compte le changement.
+                document.getElementById('answer').focus();
+            };
+
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode('Table de ' + i));
+            checkboxList.appendChild(label);
+        }
+
+        function getSelectedTables() {
+            const selected = [];
+            for (let i = 1; i <= tableCount; i++) {
+                if (document.getElementById('table-' + i).checked) {
+                    selected.push(i);
+                }
+            }
+            if (selected.length === 0) return [1]; // Fallback if nothing selected
+            return selected;
+        }
+
+        function selectAllTables() {
+            for (let i = 1; i <= tableCount; i++) {
+                document.getElementById('table-' + i).checked = true;
+            }
+        }
+
+        function selectNoTables() {
+            for (let i = 1; i <= tableCount; i++) {
+                document.getElementById('table-' + i).checked = false;
+            }
+        }
+
+        function genererMultiplication() {
+            const tables = getSelectedTables();
+
+            // Le multiplicateur est choisi parmi les tables sélectionnées
+            nombre2 = tables[Math.floor(Math.random() * tables.length)];
+
+            // L'autre chiffre est entre 0 et 10
+            nombre1 = Math.floor(Math.random() * 11);
+
+            resultatCorrect = nombre1 * nombre2;
+
+            document.getElementById('number1').textContent = nombre1;
+            document.getElementById('number2').textContent = nombre2;
+            document.getElementById('answer').value = '';
+            document.getElementById('message').textContent = '';
+            document.getElementById('rewardImage').classList.remove('show');
+            document.getElementById('answer').focus();
+        }
+
+        function updateScoreboard() {
+            const tbody = document.getElementById('scoreBody');
+            tbody.innerHTML = '';
+            const recentHistory = history.slice(-8).reverse(); // Show last 8 to fit height better
+
+            recentHistory.forEach(item => {
+                const row = document.createElement('tr');
+                const symbol_status = item.correct ? '✅' : '❌';
+                const class_status = item.correct ? 'status-vrai' : 'status-faux';
+
+                row.innerHTML = `
+                    <td>${item.n1} x ${item.n2}</td>
+                    <td>${item.userAns}</td>
+                    <td class="${class_status}">${symbol_status}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function verifier() {
+            const reponseUtilisateur = parseInt(document.getElementById('answer').value);
+            const messageElement = document.getElementById('message');
+
+            if (isNaN(reponseUtilisateur)) {
+                messageElement.textContent = '⚠️ Entre un nombre !';
+                messageElement.className = 'message faux';
+                return;
+            }
+
+            const isCorrect = reponseUtilisateur === resultatCorrect;
+
+            history.push({
+                n1: nombre1,
+                n2: nombre2,
+                userAns: reponseUtilisateur,
+                correct: isCorrect
+            });
+            updateScoreboard();
+
+            if (isCorrect) {
+                messageElement.textContent = '✅ VRAI';
+                messageElement.className = 'message vrai';
+
+                const imageAleatoire = images[Math.floor(Math.random() * images.length)];
+                const imageElement = document.getElementById('rewardImage');
+                imageElement.src = imageAleatoire;
+                imageElement.classList.add('show');
+
+                setTimeout(() => {
+                    genererMultiplication();
+                }, 3000); // 2 seconds delay
+            } else {
+                messageElement.textContent = '❌ FAUX';
+                messageElement.className = 'message faux';
+
+                const imageElement = document.getElementById('rewardImage');
+                imageElement.src = 'error.jpg';
+                imageElement.classList.add('show');
+
+                setTimeout(() => {
+                    imageElement.classList.remove('show');
+                    messageElement.textContent = '';
+                    document.getElementById('answer').value = '';
+                    document.getElementById('answer').focus();
+                }, 3000);
+            }
+        }
+
+        document.getElementById('answer').addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                verifier();
+            }
+        });
+
+        genererMultiplication();
+    </script>
+</body>
+
+</html>
